@@ -33,7 +33,19 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [data, setData] = useState(null)
-  
+  const [pureWidth, setPureWidth] = useState(window.innerWidth)
+
+  const handleResize = () => {
+    setPureWidth(window.innerWidth)
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize',handleResize)
+
+    return () => {
+      window.removeEventListener('resize',handleResize)
+    }
+  },[pureWidth])
 
   useEffect(() => {
     try{
@@ -41,7 +53,6 @@ function App() {
       fetch(`https://jsonplaceholder.typicode.com/${resourceType}`).then(resp => {
         return resp.json()
       }).then(data => {
-        console.log('data -->',data)
         setData(data)
         setLoading(false)
       })
@@ -60,10 +71,11 @@ function App() {
       <button disabled={!pureObj.counter} onClick={() => handleClick('-')}>
         {`-`}
       </button> */}
+      <h4>{pureWidth}</h4>
       <button onClick={() => setresourceType('posts')}>{`Posts`}</button>
       <button onClick={() => setresourceType('users')}>{`Users`}</button>
       <button onClick={() => setresourceType('comments')}>{`Comments`}</button>
-      {loading && (<h2 style={{color:'blue'}}>{loading}</h2>)}
+      {loading && (<h2 style={{color:'blue'}}>{`Loading...`}</h2>)}
       {error && (<p style={{color:'red'}}>{error}</p>)}
       <h3>{resourceType}</h3>
       {data && data.length > 0 && data.map((item, i) => (
