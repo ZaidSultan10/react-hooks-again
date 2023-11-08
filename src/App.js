@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 function App() {
   // const counterFunc = () => {
@@ -34,6 +34,24 @@ function App() {
   const [error, setError] = useState('')
   const [data, setData] = useState(null)
   const [pureWidth, setPureWidth] = useState(window.innerWidth)
+  const [isDark, setIsDark] = useState(false)
+  const [counterPure, setCounterPure] = useState(0)
+
+  const themeStyles = useMemo(() => {
+    console.log('i am memo running ----')
+
+    return {
+      backgroundColor : isDark ? 'black' : 'white',
+      color: isDark ? 'white' : 'black'
+    }
+  }, [isDark])
+
+  const counterMemo = useMemo(() => {
+    console.log(`i am running counter memo -----`)
+    return {
+      counter: counterPure
+    }
+  }, [counterPure > 3])
 
   const handleResize = () => {
     setPureWidth(window.innerWidth)
@@ -75,9 +93,11 @@ function App() {
       <button onClick={() => setresourceType('posts')}>{`Posts`}</button>
       <button onClick={() => setresourceType('users')}>{`Users`}</button>
       <button onClick={() => setresourceType('comments')}>{`Comments`}</button>
+      <button onClick={() => setIsDark(!isDark)}>{`Change Theme`}</button>
+      <button onClick={() => setCounterPure(counterPure + 1)}>{`Counter`}</button>
       {loading && (<h2 style={{color:'blue'}}>{`Loading...`}</h2>)}
       {error && (<p style={{color:'red'}}>{error}</p>)}
-      <h3>{resourceType}</h3>
+      <h3 style={themeStyles}>{`${resourceType} -> memo counter -> ${counterMemo.counter} -> state counter -> ${counterPure}`}</h3>
       {data && data.length > 0 && data.map((item, i) => (
         <div>
           <p>{item?.body}</p>
