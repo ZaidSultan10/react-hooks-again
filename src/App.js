@@ -47,7 +47,6 @@ function App() {
   }, [isDark])
 
   const counterMemo = useMemo(() => {
-    console.log(`i am running counter memo -----`)
     return {
       counter: counterPure
     }
