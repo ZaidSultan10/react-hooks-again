@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 function App() {
   // const counterFunc = () => {
@@ -36,6 +36,8 @@ function App() {
   const [pureWidth, setPureWidth] = useState(window.innerWidth)
   const [isDark, setIsDark] = useState(false)
   const [counterPure, setCounterPure] = useState(0)
+  const someRef = useRef(null)
+  const [refTest, setRefTest] = useState('')
 
   const themeStyles = useMemo(() => {
     console.log('i am memo running ----')
@@ -79,6 +81,17 @@ function App() {
       setError(err.message)
     }
   }, [resourceType])
+
+  const handleRefInputChange = (e) => {
+    e.preventDefault()
+    setRefTest(e.target.value)
+  }
+
+  const handleRefSubmit = () => {
+    refTest ? setRefTest('') : someRef.current.focus()
+  }
+
+  console.log('loading --',loading)
   return (
     <div className="App">
       {/* <button onClick={() => handleClick('+')}>
@@ -94,8 +107,11 @@ function App() {
       <button onClick={() => setresourceType('comments')}>{`Comments`}</button>
       <button onClick={() => setIsDark(!isDark)}>{`Change Theme`}</button>
       <button onClick={() => setCounterPure(counterPure + 1)}>{`Counter`}</button>
+      <button onClick={() => handleRefSubmit()}>{`Pure Ref`}</button>
+      <input ref={someRef} onChange = {(e) => handleRefInputChange(e)} value={refTest} />
       {loading && (<h2 style={{color:'blue'}}>{`Loading...`}</h2>)}
       {error && (<p style={{color:'red'}}>{error}</p>)}
+      {refTest && (<h4>{refTest}</h4>)}
       <h3 style={themeStyles}>{`${resourceType} -> memo counter -> ${counterMemo.counter} -> state counter -> ${counterPure}`}</h3>
       {data && data.length > 0 && data.map((item, i) => (
         <div>
