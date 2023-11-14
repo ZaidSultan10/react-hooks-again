@@ -91,7 +91,6 @@ function App() {
     refTest ? setRefTest('') : someRef.current.focus()
   }
 
-  console.log('loading --',loading)
   return (
     <div className="App">
       {/* <button onClick={() => handleClick('+')}>
