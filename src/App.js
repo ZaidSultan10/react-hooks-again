@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 function App() {
   // const counterFunc = () => {
@@ -38,6 +38,7 @@ function App() {
   const [counterPure, setCounterPure] = useState(0)
   const someRef = useRef(null)
   const [refTest, setRefTest] = useState('')
+  const [callBackNumber, setCallBackNumber] = useState(0)
 
   const themeStyles = useMemo(() => {
     console.log('i am memo running ----')
@@ -47,6 +48,11 @@ function App() {
       color: isDark ? 'white' : 'black'
     }
   }, [isDark])
+
+  const pureCallBack = useCallback(() => {
+    console.log('i am use call back =====')
+    return [callBackNumber, callBackNumber + 1, callBackNumber + 2]
+  },[callBackNumber])
 
   const counterMemo = useMemo(() => {
     return {
@@ -90,7 +96,6 @@ function App() {
   const handleRefSubmit = () => {
     refTest ? setRefTest('') : someRef.current.focus()
   }
-
   return (
     <div className="App">
       {/* <button onClick={() => handleClick('+')}>
@@ -108,6 +113,12 @@ function App() {
       <button onClick={() => setCounterPure(counterPure + 1)}>{`Counter`}</button>
       <button onClick={() => handleRefSubmit()}>{`Pure Ref`}</button>
       <input ref={someRef} onChange = {(e) => handleRefInputChange(e)} value={refTest} />
+      <input onChange={(e) => setCallBackNumber(e.target.value)} value={callBackNumber} />
+      {
+        pureCallBack && pureCallBack.length > 0 && pureCallBack.map(item => (
+          <h2>{item}</h2>
+        ))
+      }
       {loading && (<h2 style={{color:'blue'}}>{`Loading...`}</h2>)}
       {error && (<p style={{color:'red'}}>{error}</p>)}
       {refTest && (<h4>{refTest}</h4>)}
